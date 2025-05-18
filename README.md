@@ -25,3 +25,27 @@ Compactfetch can work anywhere from one Python file, so we can use it without in
 curl -s https://raw.githubusercontent.com/msh356/compactfetch/refs/heads/master/main.py | python3 -
 ```
 This command will get last compactfetch commit and run it.
+## Settings
+You can open source code (if you installing) and search for SETTINGS SECTION. There is three variables:
+```
+OVERRIDE_DISTRO = None
+OUTPUT = "\033[1mDistro: \033[0m" + get_distro()
+ALLOW_KITTY_IMAGES = False
+```
+
+Let's see every parameter
+### OVERRIDE_DISTRO
+Used for testing distro logos. Possible values:
+- None: no overriding distro
+- Distro name (str): behave as if OVERRIDE_DISTRO is your distro
+
+### OUTPUT
+Used for customizing string after distro logo
+
+### ALLOW_KITTY_IMAGES
+Used for PNG logos. Possible values:
+- False: print ASCII logos
+- True: print kitty logos (in normal terminals will be an empty string)
+
+## Credits
+Terminal logos by <a target="_blank" href="https://icons8.com">Icons8</a>

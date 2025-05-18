@@ -1,5 +1,7 @@
 #!/bin/python3
 import platform
+from base64 import standard_b64encode
+import sys
 
 def get_distro():
     if not OVERRIDE_DISTRO:
@@ -33,16 +35,19 @@ def get_distro():
             else:
                 return "Mac OS"
         else:
-            return "N/A"
+            return "Unknown"
     else:
-        return override_distro
+        return OVERRIDE_DISTRO
 
+# --------SETTINGS SECTION--------
 OVERRIDE_DISTRO = None
 OUTPUT = "\033[1mDistro: \033[0m" + get_distro()
+ALLOW_KITTY_IMAGES = False
+# ------END SETINGS SECTION-------
 
 logos = {
     # --SPECIAL LOGOS--
-    "N/A": "\033[38;2;180;180;180mN",
+    "Unknown": "\033[38;2;180;180;180mN",
     # --LINUX LOGOS--
     "Linux": "\033[38;2;245;192;33mL",
     "Fedora": "\033[38;2;81;162;218mF",
@@ -59,4 +64,35 @@ logos = {
     "Mac OS X": "\033[38;2;168;0;48mX"
 }
 
-print("\033[1m" + logos[get_distro()] + "\033[0m " + OUTPUT)
+def serialize_gr_command(**cmd):
+    payload = cmd.pop('payload', None)
+    cmd = ','.join(f'{k}={v}' for k, v in cmd.items())
+    ans = []
+    w = ans.append
+    w(b'\033_G'), w(cmd.encode('ascii'))
+    if payload:
+        w(b';')
+        w(payload)
+    w(b'\033\\')
+    return b''.join(ans)
+
+def write_chunked(**cmd):
+    data = standard_b64encode(cmd.pop('data'))
+    while data:
+        chunk, data = data[:4096], data[4096:]
+        m = 1 if data else 0
+        sys.stdout.buffer.write(serialize_gr_command(payload=chunk, m=m,
+                                                    **cmd))
+        sys.stdout.flush()
+        cmd.clear()
+
+if ALLOW_KITTY_IMAGES:
+    try:
+        with open("logos/" + get_distro() + ".png", "rb") as f:
+            write_chunked(a='T', f=100, s=16, v=16, data=f.read())
+        print(" " + OUTPUT)
+    except FileNotFoundError:
+        print("\033[0;91m[!]\033[0m no icon for your distro found. but you can suggest icon, making an issue on our GitHub! https://github.com/msh356/compactfetch/issues/new")
+        print("\033[1m" + logos[get_distro()] + "\033[0m " + OUTPUT)
+else:
+    print("\033[1m" + logos[get_distro()] + "\033[0m " + OUTPUT)

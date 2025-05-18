@@ -17,6 +17,6 @@ and run it:
 ### Method 2. Using without install
 Compactfetch can work anywhere from one Python file, so we can use it without installing:
 ```
-curl -s https://raw.githubusercontent.com/msh356/compactfetch/refs/heads/main/main.py | python3 -
+curl -s https://raw.githubusercontent.com/msh356/compactfetch/refs/heads/master/main.py?token=GHSAT0AAAAAADECWOCXWTAXAK3OJCPRQ64Y2BJ2NIQ | python3 -
 ```
 This command will get last compactfetch commit and run it.

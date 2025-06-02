@@ -9,7 +9,9 @@ def get_distro():
             try:
                 with open("/etc/os-release") as f:
                     os_release = f.read()
-                    if "ubuntu" in os_release.lower():
+                    if "kde neon" in os_release.lower():
+                        return "KDE Neon"
+                    elif "ubuntu" in os_release.lower():
                         return "Ubuntu"
                     elif "debian" in os_release.lower():
                         return "Debian"
@@ -57,6 +59,7 @@ logos = {
     "Gentoo": "\033[38;2;221;218;235mG",
     "CentOS": "\033[38;2;161;79;140mC",
     "Slackware": "\033[38;2;255;255;255mS",
+    "KDE Neon": "\033[38;2;30;130;151mN",
     # --WINDOWS LOGOS--
     "Windows": "\033[38;2;0;103;184mW",
     # --APPLE LOGOS--
